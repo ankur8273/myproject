@@ -174,7 +174,7 @@ app.post("/registerotp",async(req,res)=>{
                            const finaldoc= await userModel.findOneAndUpdate({phone:phone},{'$set':{'status':1}},{returnNewDocument:true});
                           
                           const data2={"data":finaldoc};
-                          const data1={"code":200,"status":true,"sms":"Registration Seccuss..",...data2}
+                          const data1={"code":200,"status":true,"sms":"Login Seccuss..",...data2}
                           return res.json(data1);
                        }
                        else{
