@@ -22,12 +22,19 @@ const userSchema=({
 
 });
 
+
+
 const matchSchema=({
-    roomId:{type:String,required:true},
-    playerCount:{type:Number,required:true}
+         roomId:{type:String,required:true,
+        playerCount:{type:Number,required:true},
+        game_mode:{type:Number,required:true},
+        bet_amount:{type:Number,required:true}
+       
+    },
+   
 });
 
 const userModel= new mongoose.model("User",userSchema);
-const matchModel= new mongoose.model("match",matchSchema);
+const matchModel= new mongoose.model("matchstart",matchSchema);
 
 module.exports={userModel,matchModel};
