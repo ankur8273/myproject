@@ -20,6 +20,197 @@ app.use(express.urlencoded({ extended: true }));
 // for parsing multipart/form-data
 app.use(upload.array()); 
 app.use(express.static('public'));
+        
+    //update code
+              
+    app.post('/createuser',async(req, res)=>{
+        try{
+            app.use(upload.array());
+            const {name,email,phone,password,confpassword}=req.body;
+           if(!name || !phone )//|| !email  ||!password || !confpassword)
+            {
+                return res.json({code:201,'status':false,'sms':"All field Required."});
+            }
+            if(name.length<3){
+                return res.json({code:201,'status':false,'sms':"Name must be of 3char"});
+            }
+            if(phone.length!=10){
+                
+                return res.json({code:201,'status':false,'sms':"Phone Invalid.."});
+            }
+            // if(password.length<6){
+            //     return res.json({code:201,'status':false,'sms':"Password Must be of 6char"});
+            // }
+    
+            // if(password!=confpassword){
+            //     return res.json({code:201,'status':false,'sms':"password and confpassword must be same"});
+            // }
+            if(phone.length==10){
+                const re = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/g;
+                let result = phone.match(re);
+                if(result){
+                    //validate phone number
+                    const resdoc=await userModel.findOne({phone:phone}); 
+                    if(resdoc){
+    
+                        
+                        var digits = '0123456789987098799';
+                        
+                        
+                       
+                        function generateOTP() {
+          
+                            // Declare a digits variable 
+                            // which stores all digits
+                            var digits = '0123456789';
+                            let OTP = '';
+                            for (let i = 0; i < 4; i++ ) {
+                                OTP += digits[Math.floor(Math.random() * 10)];
+                            }
+                            return OTP;
+                        }
+                          
+                       
+                         var OTP=generateOTP();
+    
+                        //refcode start
+                        var MyRefCode=Math.random().toString(36).substr(2, 8);
+                       
+                        //CODE FOR MOBILE SEND OTP
+    
+                        // var options = {
+                        //     "method": "GET",
+                        //     "hostname": "2factor.in",
+                        //     "port": null,
+                        //     "path": `/API/V1/4d064bb2-17af-11ed-9c12-0200cd936042/SMS/${phone}/${OTP}/ABCDEF`,
+                        //     "headers": {
+                        //       "content-type": "application/x-www-form-urlencoded"
+                        //     }
+                        //   };
+                          
+                        //   var req = http.request(options, function (res) {
+                        //     var chunks = [];
+                          
+                        //     res.on("data", function (chunk) {
+                        //       chunks.push(chunk);
+                        //     });
+                          
+                        //     res.on("end", function () {
+                        //       var body = Buffer.concat(chunks);
+                              
+                        //     });
+                        //   }); 
+                          
+                        //   req.write(qs.stringify({}));
+                        //   req.end();
+    
+                        //  END MOBILE SEND OTP
+                        
+                        const doc= {'name':req.body.name,MyRefCode:MyRefCode,otp:OTP}; 
+                         
+                        const id = resdoc.id;
+                       
+                        const update = await userModel.findByIdAndUpdate(id, doc,{new:true});
+                        const updatedoc=await userModel.findOne({phone:phone}); 
+                        
+                       return res.json({code:200,'status':true,'sms':"otp send success fully..",data:updatedoc});
+                    }else{
+                       
+                        var digits = '0123456789987098799';
+                        var UserId = '';
+                        for (let i = 0; i < 6; i++ ) {
+                            UserId += digits[Math.floor(Math.random() * 10)];
+                        }
+                         
+                       
+                        function generateOTP() {
+          
+                            // Declare a digits variable 
+                            // which stores all digits
+                            var digits = '0123456789';
+                            let OTP = '';
+                            for (let i = 0; i < 4; i++ ) {
+                                OTP += digits[Math.floor(Math.random() * 10)];
+                            }
+                            return OTP;
+                        }
+                          
+                       
+                         var OTP=generateOTP();
+    
+                        //refcode start
+                        var MyRefCode=Math.random().toString(36).substr(2, 8);
+                       
+                        //CODE FOR MOBILE SEND OTP
+    
+                        // var options = {
+                        //     "method": "GET",
+                        //     "hostname": "2factor.in",
+                        //     "port": null,
+                        //     "path": `/API/V1/4d064bb2-17af-11ed-9c12-0200cd936042/SMS/${phone}/${OTP}/ABCDEF`,
+                        //     "headers": {
+                        //       "content-type": "application/x-www-form-urlencoded"
+                        //     }
+                        //   };
+                          
+                        //   var req = http.request(options, function (res) {
+                        //     var chunks = [];
+                          
+                        //     res.on("data", function (chunk) {
+                        //       chunks.push(chunk);
+                        //     });
+                          
+                        //     res.on("end", function () {
+                        //       var body = Buffer.concat(chunks);
+                              
+                        //     });
+                        //   }); 
+                          
+                        //   req.write(qs.stringify({}));
+                        //   req.end();
+    
+                        //  END MOBILE SEND OTP
+                        // END VALIDATE OTP  
+    
+    
+    
+                       const doc=await new userModel({
+                           name,email,phone,password,UserId,otp:OTP,status:0,MyRefCode
+                        });
+                        
+                        const result=new Object(req.body);
+                        result.UserId=UserId;
+                        const result1={data:doc};
+                       
+                        const result2={"status":true,"code":200,"sms":"Registration Pending Varify otp.",...result1}
+    
+                        await doc.save();
+                     
+                       return res.json(result2);
+    
+                       // FINAL END
+                     }
+                       }else{
+                        res.status(400).send({code:201,'sms':"Email Invalid..","status":false});
+                        }      
+    
+                    //end validate phone number
+                }
+                else{
+                  return res.json({"code":201,"sms":"phone Invalid","status":false});
+                 
+            }
+            
+        }catch(err){
+            return res.json(err.message);
+        }
+    
+    
+    });
+
+    //end update code
+
+
 
 app.post('/createuser',async(req, res)=>{
     try{
@@ -47,7 +238,7 @@ app.post('/createuser',async(req, res)=>{
             let result = phone.match(re);
             if(result){
                 //validate phone number
-                const resdoc=await userModel.findOne({phone:phone});
+                const resdoc=await userModel.findOne({phone:phone}); 
                 if(resdoc){
                    return res.json({code:201,'status':false,'sms':"phone number is already exist try with another..."});
                 }
@@ -82,31 +273,31 @@ app.post('/createuser',async(req, res)=>{
                    
                     //CODE FOR MOBILE SEND OTP
 
-                    var options = {
-                        "method": "GET",
-                        "hostname": "2factor.in",
-                        "port": null,
-                        "path": `/API/V1/4d064bb2-17af-11ed-9c12-0200cd936042/SMS/${phone}/${OTP}/ABCDEF`,
-                        "headers": {
-                          "content-type": "application/x-www-form-urlencoded"
-                        }
-                      };
+                    // var options = {
+                    //     "method": "GET",
+                    //     "hostname": "2factor.in",
+                    //     "port": null,
+                    //     "path": `/API/V1/4d064bb2-17af-11ed-9c12-0200cd936042/SMS/${phone}/${OTP}/ABCDEF`,
+                    //     "headers": {
+                    //       "content-type": "application/x-www-form-urlencoded"
+                    //     }
+                    //   };
                       
-                      var req = http.request(options, function (res) {
-                        var chunks = [];
+                    //   var req = http.request(options, function (res) {
+                    //     var chunks = [];
                       
-                        res.on("data", function (chunk) {
-                          chunks.push(chunk);
-                        });
+                    //     res.on("data", function (chunk) {
+                    //       chunks.push(chunk);
+                    //     });
                       
-                        res.on("end", function () {
-                          var body = Buffer.concat(chunks);
+                    //     res.on("end", function () {
+                    //       var body = Buffer.concat(chunks);
                           
-                        });
-                      });
+                    //     });
+                    //   }); 
                       
-                      req.write(qs.stringify({}));
-                      req.end();
+                    //   req.write(qs.stringify({}));
+                    //   req.end();
 
                     //  END MOBILE SEND OTP
                     // END VALIDATE OTP  
