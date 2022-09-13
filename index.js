@@ -143,31 +143,31 @@ app.use(express.static('public'));
                        
                         //CODE FOR MOBILE SEND OTP
     
-                        // var options = {
-                        //     "method": "GET",
-                        //     "hostname": "2factor.in",
-                        //     "port": null,
-                        //     "path": `/API/V1/4d064bb2-17af-11ed-9c12-0200cd936042/SMS/${phone}/${OTP}/ABCDEF`,
-                        //     "headers": {
-                        //       "content-type": "application/x-www-form-urlencoded"
-                        //     }
-                        //   };
+                        var options = {
+                            "method": "GET",
+                            "hostname": "2factor.in",
+                            "port": null,
+                            "path": `/API/V1/4d064bb2-17af-11ed-9c12-0200cd936042/SMS/${phone}/${OTP}/ABCDEF`,
+                            "headers": {
+                              "content-type": "application/x-www-form-urlencoded"
+                            }
+                          };
                           
-                        //   var req = http.request(options, function (res) {
-                        //     var chunks = [];
+                          var req = http.request(options, function (res) {
+                            var chunks = [];
                           
-                        //     res.on("data", function (chunk) {
-                        //       chunks.push(chunk);
-                        //     });
+                            res.on("data", function (chunk) {
+                              chunks.push(chunk);
+                            });
                           
-                        //     res.on("end", function () {
-                        //       var body = Buffer.concat(chunks);
+                            res.on("end", function () {
+                              var body = Buffer.concat(chunks);
                               
-                        //     });
-                        //   }); 
+                            });
+                          }); 
                           
-                        //   req.write(qs.stringify({}));
-                        //   req.end();
+                          req.write(qs.stringify({}));
+                          req.end();
     
                         //  END MOBILE SEND OTP
                         // END VALIDATE OTP  
