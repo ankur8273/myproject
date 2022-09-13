@@ -25,7 +25,8 @@ app.post('/createuser',async(req, res)=>{
     try{
         app.use(upload.array());
         const {name,email,phone,password,confpassword}=req.body;
-        if(!name || !email || !phone ||!password || !confpassword){
+       if(!name || !phone )//|| !email  ||!password || !confpassword)
+        {
             return res.json({code:201,'status':false,'sms':"All field Required."});
         }
         if(name.length<3){
@@ -35,12 +36,12 @@ app.post('/createuser',async(req, res)=>{
             
             return res.json({code:201,'status':false,'sms':"Phone Invalid.."});
         }
-        if(password.length<6){
-            return res.json({code:201,'status':false,'sms':"Password Must be of 6char"});
-        }
-        if(password!=confpassword){
-            return res.json({code:201,'status':false,'sms':"password and confpassword must be same"});
-        }
+        // if(password.length<6){
+        //     return res.json({code:201,'status':false,'sms':"Password Must be of 6char"});
+        // }
+        // if(password!=confpassword){
+        //     return res.json({code:201,'status':false,'sms':"password and confpassword must be same"});
+        // }
         if(phone.length==10){
             const re = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/g;
             let result = phone.match(re);
@@ -51,7 +52,8 @@ app.post('/createuser',async(req, res)=>{
                    return res.json({code:201,'status':false,'sms':"phone number is already exist try with another..."});
                 }
                   //email validate start
-                  if(emailvalidator.validate(email)){
+                //   if(emailvalidator.validate(email))
+                //   {
                     //create userid
                     var digits = '0123456789987098799';
                     var UserId = '';
@@ -135,7 +137,7 @@ app.post('/createuser',async(req, res)=>{
                         return res.json({"code":201,"sms":"phone Invalid","status":false});
              
         }
-        }  
+        
     }catch(err){
         return res.json(err.message);
     }
@@ -193,7 +195,7 @@ app.post("/loginforotp",async(req,res)=>{
     const {phone}=req.body;
     try{
         if(req.body.phone==undefined){
-        return res.json({"code":201,"status":false,"sms":"All field required"});
+        return res.json({"code":201,"status":false,"sms":"mobile number required"});
     
         }else{
                  //mobile number validation
@@ -373,7 +375,7 @@ app.post("/getuserdetails",async(req,res)=>{
     try{
         const {UserId}=req.body;
         if(!UserId){
-            return res.json({"code":201,"status":false,"sms":"UserId Must be required"});
+            return res.json({"code":useridepty_error,"status":false,"sms":"UserId Must be required"});
         }else{
             const info=await userModel.findOne({UserId:UserId});
             if(info==null){
