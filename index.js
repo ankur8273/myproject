@@ -19,13 +19,13 @@ const DATABASE_URL=process.env.DATABASE_URL;
 connectdb(DATABASE_URL);
 // for parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true })); 
-  app.use("/match",Web);
+  
 // for parsing multipart/form-data
 app.use(upload.array()); 
 app.use(express.static('public'));
         
     //update code
-              
+    app.use("/",Web);     
     app.post('/createuser',async(req, res)=>{
         try{
             app.use(upload.array());
@@ -467,40 +467,7 @@ app.post("/getuserdetails",async(req,res)=>{
 //matchStart
 
 app.post("/matchstart",async(req,res)=>{
-    try{
-              
-        console.log(req.body.playerCount);
-        if(!req.body.playerCount){
-          return res.send({"code":201,"status":false,"sms":"Player count required."});
-        }else{
-          var digits = '0123456789987098799';
-          var RoomId = '';
-          for (let i = 0; i < 8; i++ ) {
-              RoomId += digits[Math.floor(Math.random() * 10)];
-          }
-        if(req.body.playerCount==2){
-          const doc=await matchModel({
-              playerCount:req.body.playerCount,
-              roomId:RoomId
-          });
-          await doc.save();
-          return res.send({"code":200,"status":true,"sms":"match started with 2 player",'Room_Id':RoomId});
-        }
-         if(req.body.playerCount==4){
-          const doc=await matchModel({
-              playerCount:req.body.playerCount,
-              roomId:RoomId
-          });
-          await doc.save();
-          return res.send({"code":200,"status":true,"sms":"match started with 4 player",'Room_Id':RoomId});
-        }
-            return res.send({"code":201,"status":false, "sms":"Invalid player count..",'RoomId':''});
-        }
-            
-            
-        }catch(err){
-          console.log(err);
-        }
+    
 })
 
 

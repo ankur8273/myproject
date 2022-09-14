@@ -1,4 +1,5 @@
-const errorcode={
+    const errorcode={
+    //success
     errorsuccess:200,
     error_Page_Not_Found:404,
     internal_serverError:500,
@@ -24,8 +25,6 @@ const errorcode={
     UserIdRequired:1009,
     // Invalid UserId
     InvalidUserId:1010,
-
-
 
 
 

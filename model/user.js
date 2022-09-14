@@ -25,16 +25,33 @@ const userSchema=({
 
 
 const matchSchema=({
-         roomId:{type:String,required:true,
+        roomId:{type:String,required:true},
         playerCount:{type:Number,required:true},
         game_mode:{type:Number,required:true},
-        bet_amount:{type:Number,required:true}
+        bet_amount:{type:Number,required:true},
+        bet_id:{type:Number,required:true},
+        rank_available:{type:Number},
+        left_available:{type:Number},
+        status:{type:Number},
+        Unique_id:{type:String,required:true},
+        timestamp:{type:String}
        
-    },
-   
 });
+
+const roomhistory=({
+    roomId:{type:String,required:true},
+    user_id:{type:Number},
+    bet_status:{type:Number,default:0},
+    rank:{type:Number},
+    rank_amount:{type:Number},
+    type:{type:String},
+    Unique_id:{type:String,required:true},
+    status:{type:Number},
+    timestamp:{type:String}
+})
 
 const userModel= new mongoose.model("User",userSchema);
 const matchModel= new mongoose.model("matchstart",matchSchema);
+const historyModel= new mongoose.model("roomhistory",roomhistory);
 
-module.exports={userModel,matchModel};
+module.exports={userModel,matchModel,historyModel};
