@@ -5,6 +5,7 @@ const matchcontroller=require("../controllers/matchcontroller.js");
 router.post("/roomcreate",matchcontroller.matchStart);
 router.post("/getlastroomId",matchcontroller.getlastroomId);
 router.post("/matchStartStatusUpdate",matchcontroller.matchStartStatusUpdate);
+router.get("/getpublicurl",matchcontroller.getprofile);
 
 module.exports=router;
 

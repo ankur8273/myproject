@@ -4,9 +4,20 @@ var express = require('express');
 var app = express();
 var multer = require('multer');
 var upload = multer();
+console.log(__dirname+"/public/userprofile");
 const errorStatus=require('../errorStatus');
 app.use(upload.array()); 
 class matchcontroller{
+
+    static getprofile=async(req,res)=>{
+        const publicUrl=__dirname+"/uploads";
+        try{
+            return res.json({"code":errorStatus.errorsuccess,"publicAccess":publicUrl});
+          
+        }catch(err){
+            return res.json({"code":errorStatus.internal_serverError,"sms":"something went wrong."});
+        }
+    }
     static matchStart=async(req,res)=>{
         try{
               const {
@@ -135,9 +146,6 @@ class matchcontroller{
                 return res.json({"code":errorStatus.Bad_Request,"sms":err.message,'status':false});
             }
     };
-
-
-
 }
 
 module.exports=matchcontroller;

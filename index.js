@@ -7,7 +7,17 @@ const {matchModel}=require("./model/user.js");
 const connectdb=require("./db/connectdb.js");
 const Web=require("./routes/roomapi.js");
 const errorStatus=require('./errorStatus');
- 
+const fs = require('fs')
+
+const DIR = './uploads'
+
+if(!fs.existsSync(DIR)){
+  fs.mkdirSync(DIR)
+}
+
+app.use('/uploads', express.static(process.cwd() + '/uploads'))
+
+
 require("dotenv").config();
 // for parsing application/json
 app.use(express.json()); 
