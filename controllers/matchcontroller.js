@@ -12,13 +12,13 @@ class matchcontroller{
               const {
                 room_id,       
                 player_count,
-                user_id,
+                UserId,
                 game_mode,
                 bet_amount,
                 bet_id
                 
             }=req.body;
-                if(!room_id || !player_count || !user_id || !game_mode || !bet_amount|| !bet_id){
+                if(!room_id || !player_count || !UserId || !game_mode || !bet_amount|| !bet_id){
                     return res.json({"code":errorStatus.allfieldrequired,"sms":'All  filled required','status':false});
                 }else{
                     const timestamp = Date.now();
@@ -41,13 +41,13 @@ class matchcontroller{
                     await doc.save();
 
 
-                    const userId=user_id.split(',');
-                    console.log(userId);
-                    for (let i = 0; i < userId.length; i++) {
+                    const userId1=UserId.split(',');
+                    console.log(userId1);
+                    for (let i = 0; i < userId1.length; i++) {
                         
                               const history=new historyModel({
                                 roomId:room_id,
-                                user_id:userId[i],
+                                UserId:userId1[i],
                                 bet_status:1,
                                 rank:0,
                                 rank_amount:0,
@@ -74,12 +74,12 @@ class matchcontroller{
     static getlastroomId=async(req,res)=>{
         try{
               const {
-                user_id        
+                UserId        
             }=req.body;
-                if(!user_id){
+                if(!UserId){
                     return res.json({"code":errorStatus.allfieldrequired,"sms":'All  filled required','status':false});
                 }else{
-                       const lastuser=await historyModel.findOne({user_id:user_id});
+                       const lastuser=await historyModel.findOne({UserId:UserId});
                        return res.json({"code":errorStatus.errorsuccess,status:true,"sms":'Success',data:lastuser});
                         
                   
@@ -94,15 +94,15 @@ class matchcontroller{
         try{
               const {
                 room_id,       
-                user_id,
+                UserId,
                 type,
                 
             }=req.body;
-                if(!room_id  || !user_id ){
+                if(!room_id  || !UserId ){
                     return res.json({"code":errorStatus.allfieldrequired,"sms":'All  filled required','status':false});
                 }else{
                     const timestamp = Date.now();
-                    const room_details=await matchModel.findOne({user_id:user_id,roomId:room_id});
+                    const room_details=await matchModel.findOne({UserId:UserId,roomId:room_id});
                    
                     if(type=='1'){
                        var rank_available_current=room_details.rank_available-1;
@@ -122,9 +122,9 @@ class matchcontroller{
 
                     
                    
-                   await matchModel.findOneAndUpdate({user_id:user_id,roomId:room_id},update_match_start,{new:true});
+                   await matchModel.findOneAndUpdate({UserId:UserId,roomId:room_id},update_match_start,{new:true});
 
-                    await historyModel.findOneAndUpdate({user_id:user_id,roomId:room_id},update_match_histroy,{new:true});
+                    await historyModel.findOneAndUpdate({UserId:UserId,roomId:room_id},update_match_histroy,{new:true});
                 
                     return res.json({"code":errorStatus.errorsuccess,"sms":'Winner declered successfully','status':true});
                        

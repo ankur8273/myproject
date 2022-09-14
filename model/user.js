@@ -40,7 +40,7 @@ const matchSchema=({
 
 const roomhistory=({
     roomId:{type:String,required:true},
-    user_id:{type:Number},
+    UserId:{type:Number},
     bet_status:{type:Number,default:0},
     rank:{type:Number},
     rank_amount:{type:Number},
