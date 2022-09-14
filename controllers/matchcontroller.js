@@ -104,7 +104,7 @@ class matchcontroller{
                     const timestamp = Date.now();
                     const room_details=await matchModel.findOne({user_id:user_id,roomId:room_id});
                    
-                    if(type=='winner'){
+                    if(type=='1'){
                        var rank_available_current=room_details.rank_available-1;
                        var rank=(room_details.playerCount-room_details.rank_available)+1;
                        var rank_amount=50;
