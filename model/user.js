@@ -11,13 +11,13 @@ const userSchema=({
     TotalPlayedGame:{type:Number,default:0},
     TotalLose:{type:Number,default:0},
     TotalEarning:{type:Number,default:0.00},
-    CurrentBalanace:{ type:Number,default:0.00},
+    CurrentBalance:{ type:Number,default:0.00},
     DirrectReferal:{ type: Number},
     TotalReferalTeam:{type:Number,default:0},
     TotalReferalIncome:{ type: Number,default:0.00},
     MyRefCode:{type:String,required:true},
     otp:{type:Number,required:true},
-    avatarId:{type:String,default:0},
+    avatarId:{type:Number,default:0},
     status:{type:Number,required:true}
 
 });

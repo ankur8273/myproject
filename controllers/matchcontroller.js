@@ -53,7 +53,7 @@ class matchcontroller{
 
 
                     const userId1=UserId.split(',');
-                    console.log(userId1);
+                 
                     for (let i = 0; i < userId1.length; i++) {
                         
                               const history=new historyModel({
@@ -136,7 +136,38 @@ class matchcontroller{
                    await matchModel.findOneAndUpdate({UserId:UserId,roomId:room_id},update_match_start,{new:true});
 
                     await historyModel.findOneAndUpdate({UserId:UserId,roomId:room_id},update_match_histroy,{new:true});
-                
+                    const userlists= await historyModel.find({roomId:room_id})
+                    console.log(Object.keys(userlists).length);
+                    const objects = {};
+                      for(let i=0;i<Object.keys(userlists).length;i++){
+
+                        console.log((userlists)[i].UserId);
+                        objects[(userlists)[i].UserId]={
+                             "UserId":(userlists)[i].UserId,
+                             "panku":"fsdf",
+                         }
+                         console.log(objects);
+                      }
+                     
+                   
+
+                    const data_details={data:room_details,
+                        userlist:{
+                             
+                                "1234":{
+                                    "sds":'adss'
+                                },
+                                "456567":{
+                                    "sds":'adss'
+                                }
+                            
+                        }
+    
+                    
+                    }
+                   // console.log(data_details);
+
+
                     return res.json({"code":errorStatus.errorsuccess,"sms":'Winner declered successfully','status':true});
                        
                 } 
