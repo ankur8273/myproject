@@ -49,11 +49,9 @@ class matchcontroller{
 
                     });
 
-                    await doc.save();
-
-
-                    const userId1=UserId.split(',');
-                 
+                     await doc.save();
+                     const userId1=UserId.split(',');
+                    if(player_count== (userId1.length-1)){
                     for (let i = 0; i < userId1.length; i++) {
                         
                               const history=new historyModel({
@@ -66,11 +64,21 @@ class matchcontroller{
                                 Unique_id:Unique,
                                 timestamp
                               })
+                              if(!userId1[i]){
                               await history.save();
+                              }
                                
                              
                         }
-                        return res.json({"code":errorStatus.errorsuccess,"sms":'Game start successfully','status':true});
+
+                        return res.json({"code":errorStatus.errorsuccess,"sms":'Game start successfully','status':true});  
+                    }else{
+                        return res.json({"code":errorStatus.GamePlayernotComplete,"sms":'Game Player not complete','status':true});
+
+                    }
+
+
+                      
                        
                 } 
             
@@ -137,38 +145,43 @@ class matchcontroller{
 
                     await historyModel.findOneAndUpdate({UserId:UserId,roomId:room_id},update_match_histroy,{new:true});
                     const userlists= await historyModel.find({roomId:room_id})
-                    console.log(Object.keys(userlists).length);
+                    
                     const objects = {};
                       for(let i=0;i<Object.keys(userlists).length;i++){
 
-                        console.log((userlists)[i].UserId);
+                       
                         objects[(userlists)[i].UserId]={
                              "UserId":(userlists)[i].UserId,
-                             "panku":"fsdf",
+                             "timestamp":(userlists)[i].timestamp,
+                             "rank":(userlists)[i].rank,
+                             "rank_amount":(userlists)[i].rank_amount,
+                             "type":(userlists)[i].type,
+                             "roomId":(userlists)[i].roomId,
                          }
-                         console.log(objects);
+                         
                       }
-                     
+                        
+                      const room = {
+                        room_id: room_details.roomId,
+                        playerCount: room_details.playerCount,
+                        game_mode:room_details.game_mode ,
+                        bet_amount:room_details.bet_amount ,
+                        timestamp: room_details.timestamp,
+                        game_status: 1
+                      }
+                      
+                      const objectsData = {
+                        userlists: objects
+                      }
+                      
+                      const user = { ...room, ...objectsData }
+                      
+                    // console.log(data_details);
+                    // }
                    
 
-                    const data_details={data:room_details,
-                        userlist:{
-                             
-                                "1234":{
-                                    "sds":'adss'
-                                },
-                                "456567":{
-                                    "sds":'adss'
-                                }
-                            
-                        }
-    
-                    
-                    }
-                   // console.log(data_details);
 
-
-                    return res.json({"code":errorStatus.errorsuccess,"sms":'Winner declered successfully','status':true});
+                    return res.json({"code":errorStatus.errorsuccess,"sms":'Winner declered successfully','status':true,data:user});
                        
                 } 
             

@@ -25,6 +25,9 @@
     UserIdRequired:1009,
     // Invalid UserId
     InvalidUserId:1010,
+    //Game player not complete
+    GamePlayernotComplete:1011,
+
 
 
 
