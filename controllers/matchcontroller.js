@@ -64,9 +64,10 @@ class matchcontroller{
                                 Unique_id:Unique,
                                 timestamp
                               })
-                              if(!userId1[i]){
+                             if(userId1[i]){
                               await history.save();
-                              }
+                             }
+                              
                                
                              
                         }
@@ -137,7 +138,7 @@ class matchcontroller{
                     } 
                      
                     const update_match_start={rank_available:rank_available_current};
-                    const update_match_histroy={rank:rank,rank_amount:rank_amount,type:type_status};
+                    const update_match_histroy={rank:rank,rank_amount:rank_amount,type:type_status,'bet_status':2};
 
                     
                    
@@ -160,14 +161,20 @@ class matchcontroller{
                          }
                          
                       }
-                        
+                      const game_count= await historyModel.find({roomId:room_id,bet_status:2});
+                     
+                      if(game_count.length==room_details.playerCount){
+                        var game_status_count=1;
+                      }else{
+                        var game_status_count=0;
+                      }
                       const room = {
                         room_id: room_details.roomId,
                         playerCount: room_details.playerCount,
                         game_mode:room_details.game_mode ,
                         bet_amount:room_details.bet_amount ,
                         timestamp: room_details.timestamp,
-                        game_status: 1
+                        game_status: game_status_count
                       }
                       
                       const objectsData = {
