@@ -59,7 +59,7 @@ class matchcontroller{
                                 UserId:userId1[i],
                                 bet_status:1,
                                 rank:0,
-                                rank_amount:0,
+                                win_amount:0,
                                 type :'',
                                 Unique_id:Unique,
                                 timestamp
@@ -127,18 +127,18 @@ class matchcontroller{
                     if(type=='1'){
                        var rank_available_current=room_details.rank_available-1;
                        var rank=(room_details.playerCount-room_details.rank_available)+1;
-                       var rank_amount=50;
+                       var win_amount=50;
                        var type_status=type;
                       
                     }else{
                        var rank_available_current=room_details.rank_available;
                        var rank=0;
-                       var rank_amount=0;
+                       var win_amount=0;
                        var type_status='left';
                     } 
                      
                     const update_match_start={rank_available:rank_available_current};
-                    const update_match_histroy={rank:rank,rank_amount:rank_amount,type:type_status,'bet_status':2};
+                    const update_match_histroy={rank:rank,win_amount:win_amount,type:type_status,'bet_status':2};
 
                     
                    
@@ -155,9 +155,9 @@ class matchcontroller{
                              "UserId":(userlists)[i].UserId,
                              "timestamp":(userlists)[i].timestamp,
                              "rank":(userlists)[i].rank,
-                             "rank_amount":(userlists)[i].rank_amount,
+                             "win_amount":(userlists)[i].win_amount,
                              "type":(userlists)[i].type,
-                             "roomId":(userlists)[i].roomId,
+                             "room_id":(userlists)[i].roomId,
                          }
                          
                       }
@@ -181,13 +181,9 @@ class matchcontroller{
                         userlists: objects
                       }
                       
-                      const user = { ...room, ...objectsData }
-                      
+                      const user = { ...room, ...objectsData } 
                     // console.log(data_details);
                     // }
-                   
-
-
                     return res.json({"code":errorStatus.errorsuccess,"sms":'Winner declered successfully','status':true,data:user});
                        
                 } 
@@ -197,6 +193,49 @@ class matchcontroller{
                 return res.json({"code":errorStatus.Bad_Request,"sms":err.message,'status':false});
             }
     };
+
+    //reader board
+
+    static LeaderBoard=async(req,res)=>{
+        try{
+            //const {UserId}=req.body;
+            //    var allplayer= await matchModel.find();
+                var history= await historyModel.find();
+                history.forEach((userid)=>{
+                    console.log(userid.UserId);
+                })
+               var historys=  await historyModel.aggregate([
+                {
+                   "$group": {
+                      "_id":null,
+                      "AvgValue": {
+                        "$avg": "$rank"
+                         }
+                      }
+                    }
+                 ]);
+               console.log(historys);
+               
+               const unique=await historyModel.find().distinct("UserId",function(error,ids){
+                    console.log(ids);
+               })
+               return res.json({"code":errorStatus.Bad_Request,"sms":"success",'status':false,"data":historys});
+            //    console.log(history);
+               const allUser={
+                AllUser:{
+                   one: {
+                        Rank : 1,
+                        Name:"amit",
+                        AvatarId:1,
+                        totalWinAmount:10000,
+                        UserId:"abc"
+                      },
+                },
+               }
+        }catch(err){
+            return res.json({"code":errorStatus.Bad_Request,"sms":err.message,'status':false});
+        }
+    }
 }
 
 module.exports=matchcontroller;

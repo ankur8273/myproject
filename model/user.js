@@ -43,7 +43,7 @@ const roomhistory=({
     UserId:{type:Number},
     bet_status:{type:Number,default:0},
     rank:{type:Number},
-    rank_amount:{type:Number},
+    win_amount:{type:Number},
     type:{type:String},
     Unique_id:{type:String,required:true},
     status:{type:Number},
