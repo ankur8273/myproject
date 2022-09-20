@@ -29,6 +29,49 @@ const DATABASE_URL=process.env.DATABASE_URL;
 connectdb(DATABASE_URL);
 // for parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true })); 
+
+
+//Admin Panel
+var session = require('express-session');
+// var MongoStore = require('connect-mongo')(session);
+app.use(express.static('assets'))
+
+ //Loads the handlebars module
+const handlebars = require('express-handlebars');
+//Sets our app to use the handlebars engine
+app.set('view engine', 'handlebars');
+//Sets handlebars configurations (we will go through them later on)
+app.engine('handlebars', handlebars.engine({ 
+    defaultLayout: 'main' ,
+    partialsDir: __dirname + '/views/admin/',
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true
+      }
+    
+}));
+
+app.use(session({
+    secret: "ankurreredsfbdskgmdb",
+    saveUninitialized:true,
+    resave: false
+}));
+
+
+require("./app/routes/admin.routes")(app);  
+require("./app/routes/web.routes")(app);  
+
+// Admin
+
+app.get("/", (req, res) => {
+    res.render('web/index', {layout : ''});   
+});
+
+
+//End
+
+
+
   
 // for parsing multipart/form-data
 app.use(upload.array()); 

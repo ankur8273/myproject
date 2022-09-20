@@ -1,5 +1,4 @@
 const mongoose=require("mongoose");
-
 const userSchema=({
     name:{type:String,required:true},
     email:{type:String},
@@ -49,9 +48,31 @@ const roomhistory=({
     status:{type:Number},
     timestamp:{type:String}
 })
+const gamemodeSchema=({
+    title:{type:String,required:true},
+    status:{type:Number,required:true},
+    player_type:{type:Number,required:true},
+    code:{type:Number,required:true},
+    timestamp:{type:String}
+   
+});
+
+const betdeductionSchema=({
+    bet_code:{type:String,required:true},
+    status:{type:Number,required:true},
+    amount:{type:Number,required:true},
+    rank_winning_amount:{type:Object,required:true},
+    timestamp:{type:String},
+    id:{type:Number}
+   
+});
+ 
+
 
 const userModel= new mongoose.model("User",userSchema);
 const matchModel= new mongoose.model("matchstart",matchSchema);
 const historyModel= new mongoose.model("roomhistory",roomhistory);
+const gameModeModel= new mongoose.model("game_mode",gamemodeSchema);
+const betdeductionModel= new mongoose.model("bet_deduction",betdeductionSchema);
 
-module.exports={userModel,matchModel,historyModel};
+module.exports={userModel,matchModel,historyModel,gameModeModel,betdeductionModel};

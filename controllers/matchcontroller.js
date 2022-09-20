@@ -1,5 +1,7 @@
 const {matchModel}=require("../model/user.js");
 const {historyModel}=require("../model/user.js");
+const {gameModeModel}=require("../model/user.js");
+const {betdeductionModel}=require("../model/user.js");
 var express = require('express');
 var app = express();
 var multer = require('multer');
@@ -235,7 +237,81 @@ class matchcontroller{
         }catch(err){
             return res.json({"code":errorStatus.Bad_Request,"sms":err.message,'status':false});
         }
+    };
+
+    static Bet_List_create=async(req,res)=>{
+        try{
+            const timestamp = Date.now();
+            const {title,status,player_type,code}=req.body;
+            const doc=await gameModeModel({
+                title,status,player_type,code,timestamp:timestamp
+            });
+            await doc.save();
+            return res.json({"code":200,"sms":"success","status":true,data:doc});
+        }catch(err){
+            return res.json({"code":errorStatus.Bad_Request,"sms":err.message,'status':false});
+        }
     }
+    static Bet_deduction_create=async(req,res)=>{
+        try{
+            const timestamp = Date.now();
+            const {bet_code,status,amount,code,rank,rank_winning_amount}=req.body;
+            const rank1=rank.split(',');
+            const rank_win_amount=rank_winning_amount.split(',');
+            var arr = [];
+            var obj = {};
+            for (let i = 0; i < rank1.length; i++) {     
+                obj[[rank1[i]]]= rank_win_amount[i] 
+                }
+
+                
+             
+                const doc=await betdeductionModel({
+                    bet_code,status,amount,rank_winning_amount:obj,timestamp:timestamp
+                });
+                await doc.save();
+            
+          
+            return res.json({"code":200,"sms":"success","status":true });
+        }catch(err){
+            return res.json({"code":errorStatus.Bad_Request,"sms":err.message,'status':false});
+        }
+    }
+     static bet_list_all=async(req,res)=>{
+           try{
+            const doc=await gameModeModel.find({'status':"1"},{"_id":0,"title":1,"status":1,"player_type":1,"code":1,"timestamp":1});
+            var objects={}
+             for(let i=0;i<doc.length;i++){
+            
+                
+
+
+                var docbetduction=await betdeductionModel.find({'status':"1",'bet_code':doc[i].code});
+                var deductionobj={}
+                for(let x=0;x<docbetduction.length;x++){
+                    deductionobj[docbetduction[x].unique_id]={
+                            "status":docbetduction[x].status,
+                            "amount":docbetduction[x].amount,
+                            "rank_winning_amount":{...docbetduction[x].rank_winning_amount}
+                    }
+                }
+
+                console.log(docbetduction);
+
+                objects[(doc)[i].title]={... deductionobj}
+               
+              
+             }
+
+
+             console.log(objects);
+
+             
+            return res.json({"code":errorStatus.errorsuccess,"sms":'succes',"data":objects,'status':false});
+     }catch(err){
+        return res.json({"code":errorStatus.Bad_Request,"sms":err.message,'status':false});
+     }
+}
 }
 
 module.exports=matchcontroller;
